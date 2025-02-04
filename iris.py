@@ -97,4 +97,40 @@ plt.xlabel('Epochs')
 plt.ylabel('Loss')
 plt.legend()
 
+
+
+
+from tensorflow.keras.models import load_model  # Import load_model
+from tensorflow.keras.preprocessing import image
+import numpy as np
+
+# Load the model
+model = load_model('iris_flower_classifier.h5')
+
+# Load a new image for prediction (adjust path as necessary)
+img_path = 'virginic.jpg'  # Provide path to the image you want to classify
+
+# Load the image and preprocess it
+img = image.load_img(img_path, target_size=(128, 128))  # Resize image to 128x128
+img_array = image.img_to_array(img)  # Convert image to numpy array
+img_array = np.expand_dims(img_array, axis=0)  # Add batch dimension (1, 128, 128, 3)
+
+# Normalize the image (same as done during training)
+img_array = img_array / 255.0
+
+# Use the model to predict the class
+predictions = model.predict(img_array)
+
+# The model will output a probability distribution (since we used softmax)
+# Find the index of the class with the highest probability
+class_index = np.argmax(predictions, axis=1)
+
+# Class labels (ensure these match the order you used when training)
+class_labels = ['Setosa', 'Versicolor', 'Virginica']
+
+# Print the predicted class label
+predicted_class = class_labels[class_index[0]]
+print(f'The predicted class is: {predicted_class}')
+
+
 plt.show()
